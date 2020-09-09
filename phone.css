@@ -1,0 +1,7 @@
+html,body{
+  background-color: red;
+  height: 6000px;
+}
+svg{
+  position: fixed;
+}
