@@ -1,7 +1,23 @@
 html,body{
+  font-family: 'Yantramanav', sans-serif;
   background-color: black;
-  height: 6000px;
+  height: 100%;
+  overflow: hidden;
 }
-svg{
+#preloader {
   position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: black;
+  /* change if the mask should have another color then white */
+  z-index: 99;
+  /* makes sure it stays on top */
+}
+.count{
+  color: yellow;
+}
+p{
+  color: green
 }

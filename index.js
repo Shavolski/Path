@@ -1,43 +1,36 @@
-// Get a reference to the <path>
 var paths = document.querySelectorAll('svg path');
 
 [].forEach.call(paths, function(path) {
-  // Get length of path... ~577px in this case
-  var pathLength = path.getTotalLength();
-
-  // Make very long dashes (the length of the path itself)
-  path.style.strokeDasharray = pathLength + ' ' + pathLength;
-
-  // Offset the dashes so the it appears hidden entirely
-  path.style.strokeDashoffset = pathLength;
-
-  // Jake Archibald says so
-  // https://jakearchibald.com/2013/animated-line-drawing-svg/
+  var length = path.getTotalLength();
+  // Clear any previous transition
+  path.style.transition = path.style.WebkitTransition =
+    'none';
+  // Set up the starting positions
+  path.style.strokeDasharray = length + ' ' + length;
+  path.style.strokeDashoffset = length;
+  // Trigger a layout so styles are calculated & the browser
+  // picks up the starting position before animating
   path.getBoundingClientRect();
+  // Define our transition
+  path.style.transition = path.style.WebkitTransition =
+    'stroke-dashoffset 5s ease-in-out';
+  // Go!
+  path.style.strokeDashoffset = '0';
+})
 
-  // When the page scrolls...
-  window.addEventListener("scroll", function(e) {
+//This is the preloader of the site
+$(window).on('load', function() { // makes sure the whole site is loaded
+  $('#preloader').delay(5500).fadeOut('slow');// will fade out the white DIV that covers the website.
+  $('#content').delay(350).css({'overflow':'visible'});
+})
 
-    // What % down is it?
-    // https://stackoverflow.com/questions/2387136/cross-browser-method-to-determine-vertical-scroll-percentage-in-javascript/2387222#2387222
-    // Had to try three or four differnet methods here. Kind of a cross-browser nightmare.
-    var scrollPercentage = (document.documentElement.scrollTop + document.body.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight);
-
-    // Length to offset the dashes
-    var drawLength = pathLength * scrollPercentage;
-
-    // Draw in reverse
-    path.style.strokeDashoffset = pathLength - drawLength;
-
-    // When complete, remove the dash array, otherwise shape isn't quite sharp
-   // Accounts for fuzzy math
-    if (scrollPercentage >= 0.99) {
-      path.style.strokeDasharray = "none";
-
-    } else {
-      path.style.strokeDasharray = pathLength + ' ' + pathLength;
+$('.count').each(function () {
+  var $this = $(this);
+  jQuery({ Counter: 0 }).animate({ Counter: $this.attr('data-stop') }, {
+    duration: 5000,
+    easing: 'swing',
+    step: function (now) {
+      $this.text(Math.ceil(now));
     }
-
   });
-
 });
